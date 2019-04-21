@@ -97,19 +97,8 @@ if [ $1 != "C" ] ; then #RULES FOR MACHINE C
 	iptables -A OUTPUT -p icmp --icmp-type time-exceeded -j ACCEPT
 	iptables -A OUTPUT -p icmp --icmp-type destination-unreachable -j ACCEPT #ACCEPT outbound ICMP packets #allow outgoing ICMP
 	
-	iptables -A OUTPUT -p tcp -m tcp --dport 21 -m state --state NEW,ESTABLISHED -j ACCEPT 
-	iptables -A INPUT -p tcp -m tcp --sport 21 -m state --state ESTABLISHED -j ACCEPT 
-	iptables -A INPUT -p tcp -m tcp --sport 20 -m state --state RELATED,ESTABLISHED -j ACCEPT 
-	iptables -A OUTPUT -p tcp -m tcp --dport 20 -m state --state ESTABLISHED -j ACCEPT 
-	iptables -A OUTPUT -p tcp -m tcp --sport 1024:65535 --dport 1024:65535 -m state --state RELATED,ESTABLISHED -j ACCEPT 
-	iptables -A INPUT -p tcp  -m tcp --sport 1024:65535 --dport 1024:65535 -m state --state ESTABLISHED -j ACCEPT  
-	iptables -A INPUT -p tcp -m tcp --dport 21 -m state --state NEW,ESTABLISHED -j ACCEPT 
-	iptables -A INPUT -p tcp -m tcp --dport 21 -m state --state NEW,ESTABLISHED -j ACCEPT 
-	iptables -A OUTPUT -p tcp -m tcp --sport 21 -m state --state ESTABLISHED -j ACCEPT
-	iptables -A OUTPUT -p tcp -m tcp --sport 20 -m state --state RELATED,ESTABLISHED -j ACCEPT 
-	iptables -A INPUT -p tcp -m tcp --dport 20 -m state --state ESTABLISHED -j ACCEPT 
-	iptables -A INPUT -p tcp -m tcp --sport 1024:65535 --dport 1024:65535 -m state --state RELATED,ESTABLISHED -j ACCEPT 
-	iptables -A OUTPUT -p tcp -m tcp --sport 1024:65535 --dport 1024:65535 -m state --state ESTABLISHED -j ACCEPT 
+	iptables -A INPUT -p tcp --dport 21 -j ACCEPT
+	iptables -A INPUT -p tcp --sport 20 -m state --state ESTABLISHED,RELATED -j ACCEPT
 fi
 
 
