@@ -56,11 +56,44 @@ else #RULES FOR ROUTER/MACHINE A
 	iptables -A FORWARD -p tcp -s  10.21.32.0/24 --dport 22 -m state --state NEW,ESTABLISHED -j ACCEPT
 	iptables -A FORWARD -p tcp -s  198.18.0.0/16 --dport 22 -m state --state NEW,ESTABLISHED -j ACCEPT
     	iptables -A FORWARD -m state --state ESTABLISHED,RELATED -j ACCEPT #FORWARD SSH
+	
+	iptables -A FORWARD -p tcp --dport 80 -d 100.64.21.2 -j ACCEPT
+	iptables -A FORWARD -p tcp --dport 443 -d 100.64.21.2 -j ACCEPT #forward http and https to machine B
+	iptables -A FORWARD -p tcp --dport 80 -d 100.64.21.5 -j ACCEPT
+	iptables -A FORWARD -p tcp --dport 443 -d 100.64.21.5 -j ACCEPT #forward http and https to machine F
 fi
 
-if [ $1 != "B" ] || [ $1 != "F" ] ; then
+if [ $1 != "B" ] || [ $1 != "F" ] ; then #RULES FOR MACHINE B AND F
 	iptables -A INPUT -p tcp -m tcp --dport 80 -j ACCEPT
 	iptables -A INPUT -p tcp -m tcp --dport 443 -j ACCEPT #allow http and https inbound traffic
+fi
+
+if [ $1 != "C" ] ; then #RULES FOR MACHINE C
+	iptables -P OUTPUT DROP #defaul output drop
+	
+	iptables -A INPUT -m state --state ESTABLISHED,RELATED -j ACCEPT
+	iptables -A OUTPUT -m state --state ESTABLISHED,RELATED -j ACCEPT #allow related connections
+	
+	iptables -A INPUT -s 100.64.0.0/16 -p tcp --dport 21 -j ACCEPT
+	iptables -A INPUT -s 100.64.0.0/16 -p tcp --dport 20 -j ACCEPT #allow ftp input connection
+	
+	iptables -A OUTPUT -p udp -d 100.64.21.4 --dport 53 -m state --state NEW,ESTABLISHED -j ACCEPT
+	iptables -A INPUT  -p udp -s 100.64.21.4 --sport 53 -m state --state ESTABLISHED     -j ACCEPT
+	iptables -A OUTPUT -p tcp -d 100.64.21.4 --dport 53 -m state --state NEW,ESTABLISHED -j ACCEPT
+	iptables -A INPUT  -p tcp -s 100.64.21.4 --sport 53 -m state --state ESTABLISHED     -j ACCEPT #allow DNS lookup on chase
+	
+	iptables -A OUTPUT -p tcp -m tcp --dport 80 -j ACCEPT
+	iptables -A OUTPUT -p tcp -m tcp --dport 443 -j ACCEPT #allow outbound http and https traffic
+	
+	iptables -A OUTPUT -p tcp --dport 21 -j ACCEPT
+	iptables -A OUTPUT -p tcp --dport 20 -j ACCEPT #allow ftp input connection
+	
+	iptables -A OUTPUT -p tcp --dport 22 -j ACCEPT
+	
+	iptables -A OUTPUT -p icmp --icmp-type echo-request -j ACCEPT
+	iptables -A OUTPUT -p icmp --icmp-type echo-reply -j ACCEPT
+	iptables -A OUTPUT -p icmp --icmp-type time-exceeded -j ACCEPT
+	iptables -A OUTPUT -p icmp --icmp-type destination-unreachable -j ACCEPT #ACCEPT outbound ICMP packets
 fi
 
 
