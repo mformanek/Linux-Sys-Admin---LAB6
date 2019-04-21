@@ -85,6 +85,8 @@ if [ $1 != "C" ] ; then #RULES FOR MACHINE C
 	iptables -A OUTPUT -p tcp -m tcp --dport 80 -j ACCEPT
 	iptables -A OUTPUT -p tcp -m tcp --dport 443 -j ACCEPT #allow outbound http and https traffic
 	
+	iptables -A INPUT  -p tcp --sport 21 -m state --state NEW,ESTABLISHED -j ACCEPT
+ 	iptables -A OUTPUT -p tcp --dport 21 -m state --state ESTABLISHED -j ACCEPT
 	iptables -A OUTPUT -p tcp --dport 21 -j ACCEPT
 	iptables -A OUTPUT -p tcp --dport 20 -j ACCEPT #allow ftp input connection
 	
