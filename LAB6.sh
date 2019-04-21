@@ -43,7 +43,6 @@ fi
 
 if [ $1 != "A" ] ; then
 	iptables -P FORWARD DROP #disble forwarding on non routers
-fi
 else
     iptables -P FORWARD ACCEPT #enable forwarding on routers
 fi
