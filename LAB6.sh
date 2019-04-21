@@ -45,11 +45,23 @@ fi
 
 if [ $1 != "A" ] ; then
 	iptables -P FORWARD DROP #disble forwarding on non routers
-else
+else #RULES FOR ROUTER/MACHINE A
     iptables -P FORWARD ACCEPT #enable forwarding on routers
+    iptables -A FORWARD -s 157.240.28.35 -j DROP
+    iptables -A FORWARD -d 157.240.28.35 -j DROP #block FACEBOOK
+    iptables -A FORWARD -s 216.176.177.74 -j DROP
+    iptables -A FORWARD -d 216.176.177.74 -j DROP #block CHEESEBURGER.com
+    
+    	iptables -A FORWARD -p tcp -s  100.64.0.0/16 --dport 22 -m state --state NEW,ESTABLISHED -j ACCEPT
+	iptables -A FORWARD -p tcp -s  10.21.32.0/24 --dport 22 -m state --state NEW,ESTABLISHED -j ACCEPT
+	iptables -A FORWARD -p tcp -s  198.18.0.0/16 --dport 22 -m state --state NEW,ESTABLISHED -j ACCEPT
+    	iptables -A FORWARD -m state --state ESTABLISHED,RELATED -j ACCEPT #FORWARD SSH
 fi
 
-
+if [ $1 != "B" ] || [ $1 != "F" ] ; then
+	iptables -A INPUT -p tcp -m tcp --dport 80 -j ACCEPT
+	iptables -A INPUT -p tcp -m tcp --dport 443 -j ACCEPT #allow http and https inbound traffic
+fi
 
 
 service iptables save # make sure to save rules!!! 
