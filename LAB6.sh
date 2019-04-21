@@ -22,6 +22,8 @@ fi
 
 iptables -F #reset IPTABLES
 
+iptables -A INPUT -m conntrack --ctstate ESTABLISHED,RELATED -j ACCEPT
+
 iptables -P INPUT DROP # set default DROP policy 
 iptables -P OUTPUT ACCEPT
 
