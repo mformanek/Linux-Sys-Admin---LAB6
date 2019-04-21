@@ -19,6 +19,13 @@ if [ $# == 0 ] ; then
     exit 1;
 fi
 
+if [ $1 == "OFF" ] ; then #ENABLE EVERITHING IN IPTABLES
+    iptables -P INPUT ACCEPT 
+    iptables -P FORWARD ACCEPT 
+    iptables -P OUTPUT ACCEPT
+    iptables -F #reset IPTABLES
+    exit 1;
+fi
 
 iptables -F #reset IPTABLES
 
