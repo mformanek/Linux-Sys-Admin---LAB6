@@ -24,6 +24,7 @@ if [ $1 == "OFF" ] ; then #ENABLE EVERITHING IN IPTABLES
     iptables -P FORWARD ACCEPT 
     iptables -P OUTPUT ACCEPT
     iptables -F #reset IPTABLES
+    service iptables save # make sure to save rules!!! 
     exit 1;
 fi
 
