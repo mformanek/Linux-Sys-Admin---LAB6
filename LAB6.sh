@@ -40,7 +40,7 @@ if [ $1 != "E" ] ; then
 	iptables -A INPUT -p tcp -s  10.21.32.0/24 --dport 22 -m state --state NEW,ESTABLISHED -j ACCEPT
 	iptables -A INPUT -p tcp -s  198.18.0.0/16 --dport 22 -m state --state NEW,ESTABLISHED -j ACCEPT
 	iptables -A OUTPUT -p tcp --sport 22 -m state --state ESTABLISHED -j ACCEPT
-	#On all machines exlcuding E allow inbound ssh connections from the 100.64.0.0/16, 10.21.32.0/24, and 198.18.0.0/16 subnets
+	#On all machines exlcuding E allow inbound ssh connections from the 100.64.0.0/16, 10.21.32.0/24, and 198.18.0.0/16 subnets.
 fi
 
 if [ $1 != "A" ] ; then
