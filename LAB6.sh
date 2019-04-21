@@ -74,9 +74,6 @@ if [ $1 != "C" ] ; then #RULES FOR MACHINE C
 	iptables -A INPUT -m state --state ESTABLISHED,RELATED -j ACCEPT
 	iptables -A OUTPUT -m state --state ESTABLISHED,RELATED -j ACCEPT #allow related connections
 	
-	iptables -A INPUT -s 100.64.0.0/16 -p tcp --dport 21 -j ACCEPT
-	iptables -A INPUT -s 100.64.0.0/16 -p tcp --dport 20 -j ACCEPT #allow ftp input connection
-	
 	iptables -A OUTPUT -p udp -d 100.64.21.4 --dport 53 -m state --state NEW,ESTABLISHED -j ACCEPT
 	iptables -A INPUT  -p udp -s 100.64.21.4 --sport 53 -m state --state ESTABLISHED     -j ACCEPT
 	iptables -A OUTPUT -p tcp -d 100.64.21.4 --dport 53 -m state --state NEW,ESTABLISHED -j ACCEPT
@@ -85,17 +82,26 @@ if [ $1 != "C" ] ; then #RULES FOR MACHINE C
 	iptables -A OUTPUT -p tcp -m tcp --dport 80 -j ACCEPT
 	iptables -A OUTPUT -p tcp -m tcp --dport 443 -j ACCEPT #allow outbound http and https traffic
 	
-	iptables -A INPUT  -p tcp --sport 21 -m state --state NEW,ESTABLISHED -j ACCEPT
- 	iptables -A OUTPUT -p tcp --dport 21 -m state --state ESTABLISHED -j ACCEPT
-	iptables -A OUTPUT -p tcp --dport 21 -j ACCEPT
-	iptables -A OUTPUT -p tcp --dport 20 -j ACCEPT #allow ftp input connection
-	
-	iptables -A OUTPUT -p tcp --dport 22 -j ACCEPT
+	iptables -A OUTPUT -p tcp --dport 22 -j ACCEPT #allow outgoing ssh
 	
 	iptables -A OUTPUT -p icmp --icmp-type echo-request -j ACCEPT
 	iptables -A OUTPUT -p icmp --icmp-type echo-reply -j ACCEPT
 	iptables -A OUTPUT -p icmp --icmp-type time-exceeded -j ACCEPT
-	iptables -A OUTPUT -p icmp --icmp-type destination-unreachable -j ACCEPT #ACCEPT outbound ICMP packets
+	iptables -A OUTPUT -p icmp --icmp-type destination-unreachable -j ACCEPT #ACCEPT outbound ICMP packets #allow outgoing ICMP
+	
+	iptables -A OUTPUT -p tcp -m tcp --dport 21 -m state --state NEW,ESTABLISHED -j ACCEPT 
+	iptables -A INPUT -p tcp -m tcp --sport 21 -m state --state ESTABLISHED -j ACCEPT 
+	iptables -A INPUT -p tcp -m tcp --sport 20 -m state --state RELATED,ESTABLISHED -j ACCEPT 
+	iptables -A OUTPUT -p tcp -m tcp --dport 20 -m state --state ESTABLISHED -j ACCEPT 
+	iptables -A OUTPUT -p tcp -m tcp --sport 1024:65535 --dport 1024:65535 -m state --state RELATED,ESTABLISHED -j ACCEPT 
+	iptables -A INPUT -p tcp  -m tcp --sport 1024:65535 --dport 1024:65535 -m state --state ESTABLISHED -j ACCEPT  
+	iptables -A INPUT -p tcp -m tcp --dport 21 -m state --state NEW,ESTABLISHED -j ACCEPT 
+	iptables -A INPUT -p tcp -m tcp --dport 21 -m state --state NEW,ESTABLISHED -j ACCEPT 
+	iptables -A OUTPUT -p tcp -m tcp --sport 21 -m state --state ESTABLISHED -j ACCEPT
+	iptables -A OUTPUT -p tcp -m tcp --sport 20 -m state --state RELATED,ESTABLISHED -j ACCEPT 
+	iptables -A INPUT -p tcp -m tcp --dport 20 -m state --state ESTABLISHED -j ACCEPT 
+	iptables -A INPUT -p tcp -m tcp --sport 1024:65535 --dport 1024:65535 -m state --state RELATED,ESTABLISHED -j ACCEPT 
+	iptables -A OUTPUT -p tcp -m tcp --sport 1024:65535 --dport 1024:65535 -m state --state ESTABLISHED -j ACCEPT 
 fi
 
 
