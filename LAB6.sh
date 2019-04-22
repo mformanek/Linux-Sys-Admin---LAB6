@@ -110,7 +110,7 @@ if [ $1 == "D" ] ; then #RULES FOR MACHINE D - DNS SERVER
    	iptables -A OUTPUT -p udp  --dport 53 -m state --state NEW,ESTABLISHED -j ACCEPT
 	iptables -A INPUT  -p udp  --sport 53 -m state --state NEW,ESTABLISHED -j ACCEPT
 	iptables -A OUTPUT -p tcp  --dport 53 -m state --state NEW,ESTABLISHED -j ACCEPT
-	iptables -A INPUT  -p tcp  --sport 53 -m state --state NEW,ESTABLISHED -j ACCEPT #allow inbound DNS lookup on chase
+	iptables -A INPUT  -p tcp  --sport 53 -m state --state NEW,ESTABLISHED -j ACCEPT #allow inbound DNS lookup on chase.
 fi
 
 service iptables save # make sure to save rules!!! 
