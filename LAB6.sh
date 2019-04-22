@@ -111,7 +111,18 @@ if [ $1 == "D" ] ; then #RULES FOR MACHINE D - DNS SERVER
 	iptables -A INPUT -p udp -s 0/0 --sport 1024:65535 -d $SERVER_IP --dport 53 -m state --state NEW,ESTABLISHED -j ACCEPT
 	iptables -A OUTPUT -p udp -s $SERVER_IP --sport 53 -d 0/0 --dport 1024:65535 -m state --state ESTABLISHED -j ACCEPT
 	iptables -A INPUT -p udp -s 0/0 --sport 53 -d $SERVER_IP --dport 53 -m state --state NEW,ESTABLISHED -j ACCEPT
-	iptables -A OUTPUT -p udp -s $SERVER_IP --sport 53 -d 0/0 --dport 53 -m state --state ESTABLISHED -j ACCEPT #allow inbound DNS lookup on chase.
+	iptables -A OUTPUT -p udp -s $SERVER_IP --sport 53 -d 0/0 --dport 53 -m state --state ESTABLISHED -j ACCEPT 
+	#allow inbound DNS lookup on chase.
+fi
+if [ $1 == "E" ] ; then #RULES FOR MACHINE E - FILE SERVER
+	iptables -A INPUT -p tcp -s 10.21.32.0/24 --dport 22 -m state --state NEW,ESTABLISHED -j ACCEPT
+	iptables -A OUTPUT -p tcp --sport 22 -m state --state ESTABLISHED -j ACCEPT #enable SSH connections only from 10.21.32.0/24 net
+	
+	iptables -A INPUT -m state --state NEW -p udp --dport 137 -j ACCEPT
+	iptables -A INPUT -m state --state NEW -p udp --dport 138 -j ACCEPT
+	iptables -A INPUT -m state --state NEW -p tcp --dport 139 -j ACCEPT
+	iptables -A INPUT -m state --state NEW -p tcp --dport 445 -j ACCEPT
+	#allow incoming connections for CIFS and SMB
 fi
 
 service iptables save # make sure to save rules!!! 
