@@ -71,12 +71,12 @@ else #RULES FOR ROUTER/MACHINE A
 	iptables -A FORWARD -p tcp --dport 443 -d 100.64.21.5 -j ACCEPT #forward http and https to machine F
 fi
 
-if [ $1 != "B" ] || [ $1 != "F" ] ; then #RULES FOR MACHINE B AND F
+if [ $1 == "B" ] || [ $1 == "F" ] ; then #RULES FOR MACHINE B AND F
 	iptables -A INPUT -p tcp -m tcp --dport 80 -j ACCEPT
 	iptables -A INPUT -p tcp -m tcp --dport 443 -j ACCEPT #allow http and https inbound traffic
 fi
 
-if [ $1 != "C" ] ; then #RULES FOR MACHINE C
+if [ $1 == "C" ] ; then #RULES FOR MACHINE C
 	iptables -P OUTPUT DROP #defaul output drop
 	
 	iptables -A INPUT -m state --state ESTABLISHED,RELATED -j ACCEPT
