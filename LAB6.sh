@@ -63,6 +63,8 @@ else #RULES FOR ROUTER/MACHINE A
 	#iptables -A FORWARD -p tcp --dport 443 -d 100.64.21.5 -j ACCEPT #forward http and https to machine F
 	iptables -A FORWARD -p tcp --dport 80 -d 100.64.21.0/24 -j ACCEPT
 	iptables -A FORWARD -p tcp --dport 443 -d 100.64.21.0/24 -j ACCEPT 
+	iptables -A FORWARD -p tcp --dport 53 -d 100.64.21.4 -j ACCEPT 
+
 fi
 
 if [ $1 == "B" ] || [ $1 == "F" ] ; then #RULES FOR MACHINE B AND F
