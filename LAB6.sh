@@ -57,8 +57,8 @@ else #RULES FOR ROUTER/MACHINE A
 	iptables -A FORWARD -p tcp -s  198.18.0.0/16 --dport 22 -m state --state NEW,ESTABLISHED -j ACCEPT
     	iptables -A FORWARD -m state --state ESTABLISHED,RELATED -j ACCEPT #FORWARD SSH
 	
-	iptables -A FORWARD -p tcp --dport 80 -d 100.64.21.0/24 -j ACCEPT
-	iptables -A FORWARD -p tcp --dport 443 -d 100.64.21.0/24 -j ACCEPT 
+	iptables -A FORWARD -p tcp --dport 80 -d 100.64.21.0/24  -m state --state NEW,ESTABLISHED,RELATED -j ACCEPT
+	iptables -A FORWARD -p tcp --dport 443 -d 100.64.21.0/24 -m state --state NEW,ESTABLISHED,RELATED -j ACCEPT 
 	iptables -A FORWARD -p icmp --icmp-type echo-request -j ACCEPT
 	iptables -A FORWARD -p icmp --icmp-type echo-reply -j ACCEPT
 	iptables -A FORWARD -p icmp --icmp-type time-exceeded -j ACCEPT
@@ -71,6 +71,8 @@ else #RULES FOR ROUTER/MACHINE A
 	iptables -A FORWARD -p udp --sport 53 --dport 53 -m state --state ESTABLISHED -j ACCEPT 
 	#allow inbound DNS lookup on chase
 	
+	
+
 	iptables -A FORWARD -m conntrack --ctstate ESTABLISHED,RELATED -j ACCEPT #Allow return packets for ESTABLISHED and RELATED packets
 	
 
