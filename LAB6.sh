@@ -73,7 +73,7 @@ else #RULES FOR ROUTER/MACHINE A
 	iptables -A FORWARD -p udp -s $SERVER_IP --sport 53 -d 0/0 --dport 1024:65535 -m state --state ESTABLISHED -j ACCEPT
 	iptables -A FORWARD -p udp -s 0/0 --sport 53 -d $SERVER_IP --dport 53 -m state --state NEW,ESTABLISHED -j ACCEPT
 	iptables -A FORWARD -p udp -s $SERVER_IP --sport 53 -d 0/0 --dport 53 -m state --state ESTABLISHED -j ACCEPT 
-	#allow inbound DNS lookup on chase.
+	#allow inbound DNS lookup on chase
 
 fi
 
