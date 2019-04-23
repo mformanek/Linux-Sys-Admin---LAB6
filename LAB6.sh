@@ -46,7 +46,7 @@ fi
 if [ $1 != "A" ] ; then
 	iptables -P FORWARD DROP #disble forwarding on non routers
 else #RULES FOR ROUTER/MACHINE A
-    	iptables -P FORWARD ACCEPT #enable forwarding on routers
+    	iptables -P FORWARD DROP #enable forwarding on routers
     	iptables -A FORWARD -s 157.240.28.35 -j DROP
     	iptables -A FORWARD -d 157.240.28.35 -j DROP #block FACEBOOK
     	iptables -A FORWARD -s 216.176.177.74 -j DROP
@@ -57,10 +57,12 @@ else #RULES FOR ROUTER/MACHINE A
 	iptables -A FORWARD -p tcp -s  198.18.0.0/16 --dport 22 -m state --state NEW,ESTABLISHED -j ACCEPT
     	iptables -A FORWARD -m state --state ESTABLISHED,RELATED -j ACCEPT #FORWARD SSH
 	
-	iptables -A FORWARD -p tcp --dport 80 -d 100.64.21.2 -j ACCEPT
-	iptables -A FORWARD -p tcp --dport 443 -d 100.64.21.2 -j ACCEPT #forward http and https to machine B
-	iptables -A FORWARD -p tcp --dport 80 -d 100.64.21.5 -j ACCEPT
-	iptables -A FORWARD -p tcp --dport 443 -d 100.64.21.5 -j ACCEPT #forward http and https to machine F
+	#iptables -A FORWARD -p tcp --dport 80 -d 100.64.21.2 -j ACCEPT
+	#iptables -A FORWARD -p tcp --dport 443 -d 100.64.21.2 -j ACCEPT #forward http and https to machine B
+	#iptables -A FORWARD -p tcp --dport 80 -d 100.64.21.5 -j ACCEPT
+	#iptables -A FORWARD -p tcp --dport 443 -d 100.64.21.5 -j ACCEPT #forward http and https to machine F
+	iptables -A FORWARD -p tcp --dport 80 -d 100.64.21.0/24 -j ACCEPT
+	iptables -A FORWARD -p tcp --dport 443 -d 100.64.21.0/24 -j ACCEPT 
 fi
 
 if [ $1 == "B" ] || [ $1 == "F" ] ; then #RULES FOR MACHINE B AND F
