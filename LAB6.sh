@@ -59,6 +59,7 @@ else #RULES FOR ROUTER/MACHINE A
 	
 	iptables -A FORWARD -p tcp --dport 80 -d 100.64.21.0/24  -m state --state NEW,ESTABLISHED,RELATED -j ACCEPT
 	iptables -A FORWARD -p tcp --dport 443 -d 100.64.21.0/24 -m state --state NEW,ESTABLISHED,RELATED -j ACCEPT 
+	
 	iptables -A FORWARD -p tcp --sport 80 -s 100.64.21.0/24  -m state --state NEW,ESTABLISHED,RELATED -j ACCEPT
 	iptables -A FORWARD -p tcp --sport 443 -s 100.64.21.0/24 -m state --state NEW,ESTABLISHED,RELATED -j ACCEPT 
 	
