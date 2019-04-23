@@ -57,10 +57,6 @@ else #RULES FOR ROUTER/MACHINE A
 	iptables -A FORWARD -p tcp -s  198.18.0.0/16 --dport 22 -m state --state NEW,ESTABLISHED -j ACCEPT
     	iptables -A FORWARD -m state --state ESTABLISHED,RELATED -j ACCEPT #FORWARD SSH
 	
-	#iptables -A FORWARD -p tcp --dport 80 -d 100.64.21.2 -j ACCEPT
-	#iptables -A FORWARD -p tcp --dport 443 -d 100.64.21.2 -j ACCEPT #forward http and https to machine B
-	#iptables -A FORWARD -p tcp --dport 80 -d 100.64.21.5 -j ACCEPT
-	#iptables -A FORWARD -p tcp --dport 443 -d 100.64.21.5 -j ACCEPT #forward http and https to machine F
 	iptables -A FORWARD -p tcp --dport 80 -d 100.64.21.0/24 -j ACCEPT
 	iptables -A FORWARD -p tcp --dport 443 -d 100.64.21.0/24 -j ACCEPT 
 	iptables -A FORWARD -p icmp --icmp-type echo-request -j ACCEPT
@@ -68,11 +64,11 @@ else #RULES FOR ROUTER/MACHINE A
 	iptables -A FORWARD -p icmp --icmp-type time-exceeded -j ACCEPT
 	iptables -A FORWARD -p icmp --icmp-type destination-unreachable -j ACCEPT #ACCEPT ICMP packets
 	
-	SERVER_IP="100.64.21.4"
-	iptables -A FORWARD -p udp -s 0/0 --sport 1024:65535 -d $SERVER_IP --dport 53 -m state --state NEW,ESTABLISHED -j ACCEPT
-	iptables -A FORWARD -p udp -s $SERVER_IP --sport 53 -d 0/0 --dport 1024:65535 -m state --state ESTABLISHED -j ACCEPT
-	iptables -A FORWARD -p udp -s 0/0 --sport 53 -d $SERVER_IP --dport 53 -m state --state NEW,ESTABLISHED -j ACCEPT
-	iptables -A FORWARD -p udp -s $SERVER_IP --sport 53 -d 0/0 --dport 53 -m state --state ESTABLISHED -j ACCEPT 
+
+	iptables -A FORWARD -p udp --sport 1024:65535 --dport 53 -m state --state NEW,ESTABLISHED -j ACCEPT
+	iptables -A FORWARD -p udp --sport 53 --dport 1024:65535 -m state --state ESTABLISHED -j ACCEPT
+	iptables -A FORWARD -p udp --sport 53 --dport 53 -m state --state NEW,ESTABLISHED -j ACCEPT
+	iptables -A FORWARD -p udp --sport 53 --dport 53 -m state --state ESTABLISHED -j ACCEPT 
 	#allow inbound DNS lookup on chase
 	
 	iptables -A FORWARD -m conntrack --ctstate ESTABLISHED,RELATED -j ACCEPT #Allow return packets for ESTABLISHED and RELATED packets
